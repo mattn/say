@@ -38,7 +38,12 @@ import "unsafe"
 
 import (
 	"errors"
+	"runtime"
 )
+
+func init() {
+	runtime.LockOSThread()
+}
 
 func play(filename string) error {
 	c := C.CString(filename)
