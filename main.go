@@ -48,13 +48,18 @@ func say() int {
 		return 1
 	}
 
-	f, err := ioutil.TempFile(os.TempDir(), "say")
+	dir, err := ioutil.TempDir(os.TempDir(), "say")
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "say", err)
-		os.Exit(1)
+		return 1
 	}
-	defer os.Remove(f.Name())
-	defer f.Close()
+	defer os.RemoveAll(dir)
+
+	f, err := os.Create(filepath.Join(dir, "say.wav"))
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "say", err)
+		return 1
+	}
 
 	_, err = io.Copy(f, res.Body)
 	if err != nil {
