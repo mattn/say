@@ -13,7 +13,7 @@ import (
 	"strings"
 )
 
-var s = flag.String("s", "hikari", "speaker")
+var speaker = flag.String("s", "hikari", "speaker")
 
 func say() int {
 	flag.Parse()
@@ -36,12 +36,14 @@ func say() int {
 
 	params := url.Values{}
 	params.Set("text", strings.Join(flag.Args(), " "))
+	params.Set("speaker", *speaker)
 	req, err := http.NewRequest("POST", "https://api.voicetext.jp/v1/tts", strings.NewReader(params.Encode()))
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "say", err)
 		return 1
 	}
 	req.SetBasicAuth(apikey, "")
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "say", err)
