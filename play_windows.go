@@ -19,11 +19,11 @@ var (
 )
 
 func play(filename string) error {
-	r0, _, err := procPlaySound.Call(
+	_, r1, err := procPlaySound.Call(
 		uintptr(unsafe.Pointer(syscall.StringToUTF16Ptr(filename))),
 		0,
 		SND_SYNC|SND_NODEFAULT|SND_FILENAME)
-	if r0 == 0 {
+	if r1 == 0 && err != nil {
 		return err
 	}
 	return nil
