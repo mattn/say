@@ -27,10 +27,9 @@ func say() int {
 		home = os.Getenv("USERPROFILE")
 	}
 
-	fn := filepath.Join(home, ".voicetext-apikey")
-	b, err := ioutil.ReadFile(fn)
+	b, err := ioutil.ReadFile(filepath.Join(home, ".voicetext-apikey"))
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "say", err, fn)
+		fmt.Fprintln(os.Stderr, "say", err)
 		return 1
 	}
 	apikey := strings.TrimSpace(string(b))
