@@ -12,16 +12,20 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+	"time"
 
 	"github.com/mattn/go-soundplayer"
 )
 
-var speaker = flag.String("speaker", "hikari", "show/haruka/hikari/takeru/santa/bear")
-var emotion = flag.String("emotion", "", "happiness/anger/sadness")
-var emotion_level = flag.Int("emotion_level", 1, "1/2")
-var pitch = flag.Int("pitch", 100, "50% - 200%")
-var speed = flag.Int("speed", 100, "50% - 400%")
-var volume = flag.Int("volume", 100, "50% - 200%")
+var (
+	speaker       = flag.String("speaker", "hikari", "show/haruka/hikari/takeru/santa/bear")
+	emotion       = flag.String("emotion", "", "happiness/anger/sadness")
+	emotion_level = flag.Int("emotion_level", 1, "1/2")
+	pitch         = flag.Int("pitch", 100, "50% - 200%")
+	speed         = flag.Int("speed", 100, "50% - 400%")
+	volume        = flag.Int("volume", 100, "50% - 200%")
+	keep          = flag.Bool("keep", false, "remain wav file")
+)
 
 type response struct {
 	Error struct {
@@ -99,11 +103,17 @@ func say() int {
 		fmt.Fprintln(os.Stderr, "say", err)
 		return 1
 	}
+	f.Close()
 
 	err = soundplayer.Play(f.Name())
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "say", err)
 		return 1
+	}
+
+	if *keep {
+		now := time.Now().Format("say20060102030405.wav")
+		os.Rename(f.Name(), filepath.Base(now))
 	}
 
 	return 0
