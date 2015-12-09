@@ -12,6 +12,8 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+
+	"github.com/mattn/go-soundplayer"
 )
 
 var speaker = flag.String("speaker", "hikari", "show/haruka/hikari/takeru/santa/bear")
@@ -98,7 +100,7 @@ func say() int {
 		return 1
 	}
 
-	err = play(f.Name())
+	err = soundplayer.Play(f.Name())
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "say", err)
 		return 1
