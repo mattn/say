@@ -113,7 +113,7 @@ func say() int {
 
 	if *keep {
 		now := time.Now().Format("say20060102030405.wav")
-		copyFile(f.Name(), filepath.Base(now))
+		copyFile(filepath.Base(now), f.Name())
 	}
 
 	return 0
