@@ -113,10 +113,29 @@ func say() int {
 
 	if *keep {
 		now := time.Now().Format("say20060102030405.wav")
-		os.Rename(f.Name(), filepath.Base(now))
+		copyFile(f.Name(), filepath.Base(now))
 	}
 
 	return 0
+}
+
+func copyFile(dst, src string) error {
+	in, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+	defer in.Close()
+	out, err := os.Create(dst)
+	if err != nil {
+		return err
+	}
+	defer out.Close()
+	_, err = io.Copy(out, in)
+	err = out.Close()
+	if err != nil {
+		return err
+	}
+	return err
 }
 
 func main() {
